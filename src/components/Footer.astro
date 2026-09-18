@@ -1,0 +1,129 @@
+---
+import Monogramm from './Monogramm.astro';
+import { einstellungen, mailtoLink } from '../lib/inhalte.ts';
+
+const { logo, navigation, footer, kontakt } = einstellungen;
+const jahr = new Date().getFullYear();
+---
+
+<footer class="fuss">
+  <div class="page-width fuss-inner">
+    <div class="spalte marke">
+      <Monogramm groesse="2.2rem" />
+      <p class="marke-name">
+        {logo.wortEins} <em>{logo.wortKursiv}</em> {logo.wortDrei}
+      </p>
+      <p class="marke-text">{footer.text}</p>
+    </div>
+
+    <nav class="spalte" aria-label="Footer-Navigation">
+      <h2 class="spalte-titel">Seiten</h2>
+      <ul>
+        {navigation.map((eintrag) => (
+          <li><a href={eintrag.href}>{eintrag.label}</a></li>
+        ))}
+      </ul>
+    </nav>
+
+    <div class="spalte">
+      <h2 class="spalte-titel">Kontakt</h2>
+      <ul>
+        <li>{kontakt.name}</li>
+        {kontakt.ort && <li>{kontakt.ort}</li>}
+        <li><a href={mailtoLink()}>{kontakt.email}</a></li>
+        {kontakt.telefon && (
+          <li><a href={`tel:${kontakt.telefon.replace(/[^+\d]/g, '')}`}>{kontakt.telefon}</a></li>
+        )}
+      </ul>
+    </div>
+  </div>
+
+  <div class="page-width fuss-unten">
+    <p>&copy; {jahr} {kontakt.name}</p>
+    <ul class="rechtliches">
+      {footer.rechtlicheLinks.map((eintrag) => (
+        <li><a href={eintrag.href}>{eintrag.label}</a></li>
+      ))}
+    </ul>
+  </div>
+</footer>
+
+<style>
+  .fuss {
+    background: var(--c-cream);
+    border-top: 1px solid var(--c-line);
+    padding-top: var(--space-xl);
+    font-size: var(--fs-small);
+  }
+
+  .fuss-inner {
+    display: grid;
+    gap: var(--space-xl);
+  }
+
+  .marke-name {
+    margin-top: var(--space-sm);
+    font-family: var(--font-serif);
+    font-size: 1.4rem;
+    color: var(--c-ink);
+  }
+
+  .marke-name em {
+    font-style: italic;
+  }
+
+  .marke-text {
+    margin-top: var(--space-xs);
+    max-width: 36ch;
+  }
+
+  .spalte-titel {
+    font-family: var(--font-sans);
+    font-size: var(--fs-eyebrow);
+    font-weight: 700;
+    letter-spacing: var(--ls-eyebrow);
+    text-transform: uppercase;
+    color: var(--c-muted);
+  }
+
+  .spalte ul {
+    margin-top: var(--space-md);
+  }
+
+  .spalte li + li {
+    margin-top: var(--space-xs);
+  }
+
+  .fuss a {
+    color: var(--c-body);
+    text-decoration: none;
+  }
+
+  .fuss a:hover {
+    color: var(--c-terracotta-ink);
+    text-decoration: underline;
+  }
+
+  .fuss-unten {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--space-md);
+    margin-top: var(--space-xl);
+    padding-block: var(--space-md);
+    border-top: 1px solid var(--c-line);
+    color: var(--c-muted);
+  }
+
+  .rechtliches {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-md);
+  }
+
+  @media (min-width: 48em) {
+    .fuss-inner {
+      grid-template-columns: 2fr 1fr 1fr;
+    }
+  }
+</style>

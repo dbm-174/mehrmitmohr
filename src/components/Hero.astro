@@ -1,0 +1,131 @@
+---
+import Eyebrow from './Eyebrow.astro';
+import Button from './Button.astro';
+import Handschrift from './Handschrift.astro';
+
+interface Props {
+  eyebrow: string;
+  ueberschrift: string;
+  text: string;
+  buttonText: string;
+  buttonLink: string;
+  bild: string;
+  bildAlt: string;
+  handschrift?: string;
+}
+
+const { eyebrow, ueberschrift, text, buttonText, buttonLink, bild, bildAlt, handschrift } =
+  Astro.props;
+---
+
+<section class="hero">
+  <div class="hero-text">
+    <div class="hero-text-inner">
+      <Eyebrow>{eyebrow}</Eyebrow>
+      <h1>{ueberschrift}</h1>
+      <p class="hero-lead">{text}</p>
+      <Button href={buttonLink}>{buttonText}</Button>
+    </div>
+  </div>
+
+  <div class="hero-bild">
+    <img src={bild} alt={bildAlt} fetchpriority="high" decoding="async" />
+    {handschrift && (
+      <Handschrift class="hero-notiz" hell drehung={-6}>{handschrift}</Handschrift>
+    )}
+  </div>
+</section>
+
+<style>
+  .hero {
+    background: var(--c-cream-warm);
+  }
+
+  .hero-text {
+    padding-block: var(--space-2xl);
+    padding-inline: var(--gutter);
+  }
+
+  .hero-text-inner > * + * {
+    margin-top: var(--space-md);
+  }
+
+  .hero h1 {
+    font-size: var(--fs-hero);
+    line-height: var(--lh-tight);
+    letter-spacing: -0.01em;
+  }
+
+  .hero-lead {
+    max-width: 38ch;
+    font-size: var(--fs-lead);
+  }
+
+  .hero-text-inner :global(.btn) {
+    margin-top: var(--space-lg);
+  }
+
+  /* --- Bildseite --- */
+  .hero-bild {
+    position: relative;
+  }
+
+  .hero-bild img {
+    width: 100%;
+    height: 100%;
+    min-height: 16rem;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .hero-bild :global(.hero-notiz) {
+    position: absolute;
+    right: var(--space-md);
+    bottom: var(--space-md);
+    max-width: 8em;
+    text-align: right;
+    /* Um den rechten Rand drehen, sonst schiebt die Drehung
+       den Text über die Bildkante hinaus. */
+    transform-origin: right center;
+    text-shadow: 0 1px 12px rgba(12, 40, 56, 0.6);
+  }
+
+  .hero-bild :global(.hero-notiz svg) {
+    margin-left: auto;
+  }
+
+  @media (max-width: 47.9375em) {
+    .hero-bild img {
+      aspect-ratio: 4 / 3;
+      height: auto;
+    }
+  }
+
+  @media (min-width: 48em) {
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      align-items: stretch;
+    }
+
+    /* Der Text startet exakt dort, wo auch der Seitencontainer beginnt:
+       Die Spalte ist 50 % breit, 200 % entsprechen also der vollen Breite. */
+    .hero-text {
+      display: flex;
+      align-items: center;
+      padding-inline-start: max(var(--gutter), calc((200% - var(--width-page)) / 2));
+      padding-inline-end: var(--space-xl);
+    }
+
+    .hero-bild img {
+      min-height: 32rem;
+    }
+
+    .hero-bild :global(.hero-notiz) {
+      top: 14%;
+      right: clamp(2rem, 4vw, 4rem);
+      bottom: auto;
+      max-width: 7em;
+    }
+  }
+</style>

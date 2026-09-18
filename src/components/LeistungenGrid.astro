@@ -1,0 +1,71 @@
+---
+import Eyebrow from './Eyebrow.astro';
+import LeistungKarte from './LeistungKarte.astro';
+import { ladeLeistungen } from '../lib/inhalte.ts';
+
+interface Props {
+  eyebrow?: string;
+  /** Überschrift für Unterseiten – auf der Startseite steht nur die Eyebrow */
+  ueberschrift?: string;
+}
+
+const { eyebrow, ueberschrift } = Astro.props;
+const leistungen = await ladeLeistungen();
+---
+
+<section class="leistungen section">
+  <div class="page-width">
+    {eyebrow && <Eyebrow zentriert>{eyebrow}</Eyebrow>}
+    {ueberschrift && <h2 class="leistungen-titel">{ueberschrift}</h2>}
+
+    <div class="raster">
+      {leistungen.map((leistung) => (
+        <LeistungKarte
+          titel={leistung.data.titel}
+          teaser={leistung.data.teaser}
+          icon={leistung.data.icon}
+          farbe={leistung.data.farbe}
+          href={`/leistungen/${leistung.id}`}
+        />
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .leistungen {
+    background: var(--c-cream);
+  }
+
+  .leistungen-titel {
+    margin-top: var(--space-md);
+    text-align: center;
+  }
+
+  /* Der 1px-Abstand auf der Linienfarbe erzeugt die Trennlinien
+     zwischen den Karten – in jeder Spaltenzahl sauber. */
+  .raster {
+    display: grid;
+    gap: 1px;
+    margin-top: var(--space-xl);
+    background: var(--c-line);
+  }
+
+  @media (min-width: 34em) {
+    .raster {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 52em) {
+    .raster {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 72em) {
+    .raster {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+  }
+</style>

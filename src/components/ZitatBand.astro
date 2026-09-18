@@ -1,0 +1,123 @@
+---
+interface Props {
+  text: string;
+  hintergrundbild?: string;
+  badgeText?: string;
+  badgeLink?: string;
+}
+
+const { text, hintergrundbild, badgeText, badgeLink } = Astro.props;
+const stil = hintergrundbild ? `--bild: url('${hintergrundbild}')` : undefined;
+---
+
+<section class="zitat-band" style={stil}>
+  <div class="page-width zitat-inner">
+    <blockquote class="zitat">
+      <span class="anfuehrung" aria-hidden="true">&ldquo;</span>
+      <p>{text}</p>
+    </blockquote>
+
+    {badgeText && badgeLink && (
+      <a class="badge" href={badgeLink}>
+        <span>{badgeText}</span>
+        <span class="badge-pfeil" aria-hidden="true">&rarr;</span>
+      </a>
+    )}
+  </div>
+</section>
+
+<style>
+  .zitat-band {
+    position: relative;
+    background-color: var(--c-cream-warm);
+    background-image: var(--bild, none);
+    background-size: cover;
+    background-position: center 65%;
+  }
+
+  /* Helle Schicht über dem Foto, damit der dunkle Text sicher lesbar bleibt. */
+  .zitat-band::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      100deg,
+      rgba(251, 248, 244, 0.94) 0%,
+      rgba(251, 248, 244, 0.86) 45%,
+      rgba(251, 248, 244, 0.62) 100%
+    );
+  }
+
+  .zitat-inner {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-xl);
+    padding-block: var(--space-2xl);
+  }
+
+  .zitat {
+    display: flex;
+    gap: var(--space-md);
+    /* Wachsen erlauben, sonst quetscht der Farbfleck daneben
+       das Zitat auf wenige Wörter pro Zeile zusammen. */
+    flex: 1 1 22rem;
+    max-width: 36rem;
+  }
+
+  .anfuehrung {
+    font-family: var(--font-serif);
+    font-size: 4rem;
+    line-height: 0.8;
+    color: var(--c-terracotta);
+  }
+
+  .zitat p {
+    font-family: var(--font-serif);
+    font-size: var(--fs-h2);
+    line-height: var(--lh-heading);
+    color: var(--c-ink);
+    text-wrap: balance;
+  }
+
+  /* Der Pinselstrich-Hinweis aus dem Layout. */
+  .badge {
+    display: block;
+    max-width: 15rem;
+    padding: var(--space-md) var(--space-lg);
+    background: var(--c-terracotta);
+    color: var(--c-white);
+    font-family: var(--font-script);
+    font-size: 1.15rem;
+    line-height: 1.3;
+    text-align: center;
+    text-decoration: none;
+    transform: rotate(-3deg);
+    border-radius: 60% 40% 55% 45% / 55% 60% 40% 45%;
+    transition: transform var(--transition), background var(--transition);
+  }
+
+  .badge:hover {
+    background: var(--c-terracotta-ink);
+    color: var(--c-white);
+    transform: rotate(-3deg) scale(1.03);
+  }
+
+  .badge-pfeil {
+    display: block;
+    margin-top: var(--space-2xs);
+  }
+
+  @media (min-width: 62em) {
+    .zitat-inner {
+      justify-content: space-between;
+      padding-block: clamp(4rem, 3rem + 4vw, 6.5rem);
+    }
+
+    .zitat {
+      margin-left: clamp(0rem, 5vw, 6rem);
+    }
+  }
+</style>

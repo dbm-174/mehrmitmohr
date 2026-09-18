@@ -1,0 +1,19 @@
+# Abhängigkeiten
+node_modules/
+
+# Build-Ergebnisse
+dist/
+.astro/
+
+# Von TinaCMS erzeugt
+tina/__generated__/
+public/admin/
+
+# Zugangsdaten – niemals einchecken
+.env
+.env.*
+!.env.example
+
+# Betriebssystem / Editor
+.DS_Store
+*.log

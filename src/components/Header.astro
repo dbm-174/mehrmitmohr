@@ -1,0 +1,257 @@
+---
+import Monogramm from './Monogramm.astro';
+import { einstellungen } from '../lib/inhalte.ts';
+
+const { logo, navigation } = einstellungen;
+
+/** Aktuellen Pfad ohne abschließenden Schrägstrich, damit "/leistungen/"
+ *  und "/leistungen" gleich behandelt werden. */
+const pfad = Astro.url.pathname.replace(/\/+$/, '') || '/';
+
+function istAktiv(href: string): boolean {
+  const ziel = href.replace(/\/+$/, '') || '/';
+  if (ziel === '/') return pfad === '/';
+  return pfad === ziel || pfad.startsWith(`${ziel}/`);
+}
+---
+
+<header class="kopf">
+  <div class="page-width kopf-inner">
+    <a href="/" class="logo" aria-label={`${logo.wortEins} ${logo.wortKursiv} ${logo.wortDrei} – zur Startseite`}>
+      <span class="logo-name">
+        {logo.wortEins} <em>{logo.wortKursiv}</em> {logo.wortDrei}
+      </span>
+      <span class="logo-claim">{logo.claim}</span>
+    </a>
+
+    <button
+      class="menue-schalter"
+      type="button"
+      aria-expanded="false"
+      aria-controls="hauptnavigation"
+      data-menue-schalter
+    >
+      <span class="visually-hidden">Menü</span>
+      <span class="balken" aria-hidden="true"></span>
+      <span class="balken" aria-hidden="true"></span>
+      <span class="balken" aria-hidden="true"></span>
+    </button>
+
+    <nav class="navigation" id="hauptnavigation" aria-label="Hauptnavigation" data-menue>
+      <ul>
+        {navigation.map((eintrag) => (
+          <li>
+            <a
+              href={eintrag.href}
+              class:list={['nav-link', { aktiv: istAktiv(eintrag.href) }]}
+              aria-current={istAktiv(eintrag.href) ? 'page' : undefined}
+            >
+              {eintrag.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+    <a href="/" class="signet" tabindex="-1" aria-hidden="true">
+      <Monogramm groesse="2.4rem" />
+    </a>
+  </div>
+</header>
+
+<script>
+  const schalter = document.querySelector<HTMLButtonElement>('[data-menue-schalter]');
+  const menue = document.querySelector<HTMLElement>('[data-menue]');
+
+  schalter?.addEventListener('click', () => {
+    const offen = schalter.getAttribute('aria-expanded') === 'true';
+    schalter.setAttribute('aria-expanded', String(!offen));
+    menue?.classList.toggle('offen', !offen);
+  });
+
+  // Mit Escape schließen, damit die Tastaturbedienung nicht feststeckt.
+  document.addEventListener('keydown', (event) => {
+    if (event.key !== 'Escape') return;
+    if (schalter?.getAttribute('aria-expanded') !== 'true') return;
+    schalter.setAttribute('aria-expanded', 'false');
+    menue?.classList.remove('offen');
+    schalter.focus();
+  });
+</script>
+
+<style>
+  .kopf {
+    position: relative;
+    z-index: 20;
+    background: var(--c-cream);
+    border-bottom: 1px solid var(--c-line);
+  }
+
+  .kopf-inner {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    padding-block: var(--space-md);
+  }
+
+  /* --- Logo --- */
+  .logo {
+    margin-right: auto;
+    text-decoration: none;
+    color: var(--c-ink);
+  }
+
+  .logo-name {
+    display: block;
+    font-family: var(--font-serif);
+    font-size: clamp(1.5rem, 1.2rem + 1.3vw, 2.1rem);
+    font-weight: 500;
+    line-height: 1.05;
+    letter-spacing: 0.01em;
+  }
+
+  .logo-name em {
+    font-style: italic;
+  }
+
+  .logo-claim {
+    display: block;
+    margin-top: 0.35em;
+    font-size: 0.66rem;
+    font-weight: 400;
+    letter-spacing: 0.24em;
+    line-height: 1.2;
+    text-transform: uppercase;
+    color: var(--c-muted);
+  }
+
+  /* --- Navigation --- */
+  .navigation ul {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: clamp(1rem, 0.3rem + 1.6vw, 2rem);
+  }
+
+  .nav-link {
+    position: relative;
+    display: inline-block;
+    padding-block: 0.35em;
+    font-size: var(--fs-small);
+    color: var(--c-body);
+    text-decoration: none;
+    transition: color var(--transition);
+  }
+
+  .nav-link:hover {
+    color: var(--c-ink);
+  }
+
+  .nav-link.aktiv {
+    color: var(--c-ink);
+    font-weight: 700;
+  }
+
+  .nav-link.aktiv::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 2px;
+    background: var(--c-terracotta);
+  }
+
+  /* --- Signet rechts --- */
+  .signet {
+    display: none;
+    flex: none;
+    margin-left: var(--space-lg);
+    text-decoration: none;
+  }
+
+  /* --- Menü-Schalter (nur mobil sichtbar) --- */
+  .menue-schalter {
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 2.75rem;
+    height: 2.75rem;
+    padding: 0.6rem;
+    background: transparent;
+    border: 1px solid var(--c-line);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+  }
+
+  .balken {
+    display: block;
+    height: 2px;
+    background: var(--c-ink);
+    transition: transform var(--transition), opacity var(--transition);
+  }
+
+  .menue-schalter[aria-expanded='true'] .balken:nth-child(2) {
+    transform: translateY(7px) rotate(45deg);
+  }
+
+  .menue-schalter[aria-expanded='true'] .balken:nth-child(3) {
+    opacity: 0;
+  }
+
+  .menue-schalter[aria-expanded='true'] .balken:nth-child(4) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+
+  /* --- klein: Navigation klappt unter den Kopf --- */
+  @media (max-width: 47.9375em) {
+    .navigation {
+      display: none;
+      width: 100%;
+      order: 3;
+    }
+
+    .navigation.offen {
+      display: block;
+    }
+
+    .navigation ul {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0;
+      margin-top: var(--space-md);
+      border-top: 1px solid var(--c-line);
+    }
+
+    .nav-link {
+      display: block;
+      padding: var(--space-sm) 0;
+      border-bottom: 1px solid var(--c-line);
+      font-size: var(--fs-body);
+    }
+
+    .nav-link.aktiv::after {
+      right: auto;
+      width: 1.75rem;
+      bottom: -1px;
+    }
+  }
+
+  /* --- ab mittel: alles nebeneinander --- */
+  @media (min-width: 48em) {
+    .menue-schalter {
+      display: none;
+    }
+
+    .navigation {
+      display: block;
+    }
+  }
+
+  @media (min-width: 64em) {
+    .signet {
+      display: block;
+    }
+  }
+</style>

@@ -1,0 +1,19 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SeitenKopf from '../components/SeitenKopf.astro';
+import Button from '../components/Button.astro';
+---
+
+<BaseLayout titel="Seite nicht gefunden" beschreibung="Diese Seite gibt es nicht (mehr).">
+  <SeitenKopf
+    titel="Diese Seite gibt es nicht."
+    eyebrow="Fehler 404"
+    einleitung="Vielleicht hat sich ein Tippfehler in die Adresse geschlichen, oder die Seite ist umgezogen."
+  />
+
+  <div class="section">
+    <div class="page-width">
+      <Button href="/">Zurück zur Startseite</Button>
+    </div>
+  </div>
+</BaseLayout>

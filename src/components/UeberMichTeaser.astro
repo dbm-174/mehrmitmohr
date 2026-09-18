@@ -1,0 +1,120 @@
+---
+import Eyebrow from './Eyebrow.astro';
+import Handschrift from './Handschrift.astro';
+
+interface Props {
+  eyebrow: string;
+  ueberschrift: string;
+  textEins: string;
+  textZwei?: string;
+  linkText: string;
+  linkZiel: string;
+  bild: string;
+  bildAlt: string;
+  handschrift?: string;
+}
+
+const {
+  eyebrow,
+  ueberschrift,
+  textEins,
+  textZwei,
+  linkText,
+  linkZiel,
+  bild,
+  bildAlt,
+  handschrift,
+} = Astro.props;
+---
+
+<section class="ueber-mich">
+  <div class="bildseite">
+    <img src={bild} alt={bildAlt} loading="lazy" decoding="async" />
+  </div>
+
+  <div class="textseite">
+    <Eyebrow>{eyebrow}</Eyebrow>
+    <h2>{ueberschrift}</h2>
+    <p>{textEins}</p>
+    {textZwei && <p>{textZwei}</p>}
+    <a class="weiter" href={linkZiel}>
+      {linkText}
+      <span aria-hidden="true">&rarr;</span>
+    </a>
+  </div>
+
+  {handschrift && (
+    <div class="notizseite">
+      <Handschrift drehung={-4}>{handschrift}</Handschrift>
+    </div>
+  )}
+</section>
+
+<style>
+  .ueber-mich {
+    display: grid;
+    background: var(--c-white);
+  }
+
+  .bildseite img {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+  }
+
+  .textseite {
+    padding: var(--space-2xl) var(--gutter);
+  }
+
+  .textseite > * + * {
+    margin-top: var(--space-md);
+  }
+
+  .textseite h2 {
+    max-width: 22ch;
+  }
+
+  .textseite p {
+    max-width: 58ch;
+  }
+
+  .weiter {
+    display: inline-flex;
+    gap: 0.5em;
+    margin-top: var(--space-lg);
+    font-size: var(--fs-small);
+    font-weight: 700;
+    color: var(--c-green-ink);
+    text-decoration: none;
+  }
+
+  .weiter:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.3em;
+  }
+
+  .notizseite {
+    padding: 0 var(--gutter) var(--space-2xl);
+  }
+
+  @media (min-width: 62em) {
+    .ueber-mich {
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.6fr) minmax(0, 0.75fr);
+      align-items: center;
+    }
+
+    .bildseite img {
+      aspect-ratio: auto;
+      min-height: 26rem;
+    }
+
+    .textseite {
+      padding-inline: clamp(var(--space-lg), 4vw, var(--space-xl));
+    }
+
+    .notizseite {
+      padding: var(--space-lg) var(--space-lg) var(--space-lg) 0;
+    }
+  }
+</style>

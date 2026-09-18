@@ -1,0 +1,127 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SeitenKopf from '../../components/SeitenKopf.astro';
+import LeistungIcon from '../../components/LeistungIcon.astro';
+import AbschlussBand from '../../components/AbschlussBand.astro';
+import { ladeLeistungen, startseite } from '../../lib/inhalte.ts';
+
+/** Für jede Datei unter content/leistungen/ entsteht eine eigene Seite. */
+export const getStaticPaths = (async () => {
+  const leistungen = await ladeLeistungen();
+  return leistungen.map((leistung) => ({
+    params: { slug: leistung.id },
+    props: { leistung },
+  }));
+}) satisfies GetStaticPaths;
+
+const { leistung } = Astro.props;
+const { Content } = await render(leistung);
+const daten = leistung.data;
+const abschluss = startseite.abschluss;
+
+// Die übrigen Leistungen als Querverweis am Seitenende.
+const weitere = (await ladeLeistungen()).filter((eintrag) => eintrag.id !== leistung.id);
+
+const akzent = `--c-accent: var(--c-accent-${daten.farbe}); --c-accent-ink: var(--c-accent-${daten.farbe}-ink);`;
+---
+
+<BaseLayout titel={daten.titel} beschreibung={daten.seo?.beschreibung ?? daten.teaser}>
+  <div style={akzent}>
+    <div class="kopf-mit-icon">
+      <div class="page-width">
+        <span class="kreis" aria-hidden="true">
+          <LeistungIcon name={daten.icon} />
+        </span>
+      </div>
+    </div>
+
+    <SeitenKopf titel={daten.titel} eyebrow="Leistung" einleitung={daten.teaser} />
+
+    <div class="section">
+      <div class="page-width">
+        <div class="prose">
+          <Content />
+        </div>
+      </div>
+    </div>
+
+    <section class="weitere section">
+      <div class="page-width">
+        <h2>Weitere Leistungen</h2>
+        <ul class="weitere-liste">
+          {weitere.map((eintrag) => (
+            <li style={`--c-accent-ink: var(--c-accent-${eintrag.data.farbe}-ink);`}>
+              <a href={`/leistungen/${eintrag.id}`}>
+                {eintrag.data.titel}
+                <span aria-hidden="true">&rarr;</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  </div>
+
+  <AbschlussBand
+    ueberschrift={abschluss.ueberschrift}
+    text={abschluss.text}
+    buttonText={abschluss.buttonText}
+    buttonLink={abschluss.buttonLink}
+    bild={abschluss.bild}
+    bildAlt={abschluss.bildAlt}
+  />
+</BaseLayout>
+
+<style>
+  /* Das farbige Sinnbild sitzt oben im Kopfbereich der Leistung. */
+  .kopf-mit-icon {
+    background: var(--c-cream-warm);
+    padding-top: var(--space-2xl);
+  }
+
+  .kopf-mit-icon .kreis {
+    display: grid;
+    place-items: center;
+    width: 4rem;
+    height: 4rem;
+    padding: 1rem;
+    border-radius: var(--radius-pill);
+    background: var(--c-accent);
+    color: var(--c-white);
+  }
+
+  .kopf-mit-icon + :global(section) {
+    padding-top: var(--space-lg);
+  }
+
+  .weitere {
+    background: var(--c-cream);
+    border-top: 1px solid var(--c-line);
+  }
+
+  .weitere h2 {
+    font-size: var(--fs-h3);
+  }
+
+  .weitere-liste {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-md) var(--space-xl);
+    margin-top: var(--space-lg);
+  }
+
+  .weitere-liste a {
+    display: inline-flex;
+    gap: 0.5em;
+    font-weight: 700;
+    color: var(--c-accent-ink);
+    text-decoration: none;
+  }
+
+  .weitere-liste a:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.3em;
+  }
+</style>

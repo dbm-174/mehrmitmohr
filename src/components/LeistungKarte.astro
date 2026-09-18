@@ -1,0 +1,102 @@
+---
+import LeistungIcon from './LeistungIcon.astro';
+import type { FARBEN, ICONS } from '../content.config';
+
+/** Eine der fünf Leistungs-Karten auf der Startseite. */
+interface Props {
+  titel: string;
+  teaser: string;
+  icon: (typeof ICONS)[number];
+  farbe: (typeof FARBEN)[number];
+  href: string;
+}
+
+const { titel, teaser, icon, farbe, href } = Astro.props;
+
+// Die in TinaCMS gewählte Farbe auf die Design-Tokens abbilden.
+const akzent = `--c-accent: var(--c-accent-${farbe}); --c-accent-ink: var(--c-accent-${farbe}-ink);`;
+---
+
+<article class="karte" style={akzent}>
+  <span class="kreis" aria-hidden="true">
+    <LeistungIcon name={icon} />
+  </span>
+
+  <h3 class="karte-titel">{titel}</h3>
+  <p class="karte-text">{teaser}</p>
+
+  <a class="karte-link" href={href}>
+    Mehr erfahren
+    <span aria-hidden="true">&rarr;</span>
+    <span class="visually-hidden">&nbsp;über {titel}</span>
+  </a>
+</article>
+
+<style>
+  .karte {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    background: var(--c-cream);
+    padding: var(--space-lg) var(--space-md);
+  }
+
+  .kreis {
+    display: grid;
+    place-items: center;
+    width: 3.5rem;
+    height: 3.5rem;
+    padding: 0.9rem;
+    margin-bottom: var(--space-sm);
+    border-radius: var(--radius-pill);
+    background: var(--c-accent);
+    color: var(--c-white);
+  }
+
+  .karte-titel {
+    font-size: var(--fs-h3);
+    text-wrap: pretty;
+    /* "Manuskriptberatung" ist breiter als eine schmale Spalte –
+       ohne Trennung würde das Wort aus der Karte laufen. */
+    hyphens: auto;
+    overflow-wrap: break-word;
+  }
+
+  .karte-text {
+    font-size: var(--fs-small);
+    margin-bottom: var(--space-md);
+  }
+
+  .karte-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    margin-top: auto;
+    font-size: var(--fs-small);
+    font-weight: 700;
+    color: var(--c-accent-ink);
+    text-decoration: none;
+  }
+
+  /* Ganze Karte anklickbar machen, ohne den Link aus dem Fließtext zu reißen. */
+  .karte-link::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+
+  .karte:hover .karte-link {
+    text-decoration: underline;
+    text-underline-offset: 0.3em;
+  }
+
+  .karte:has(.karte-link:focus-visible) {
+    outline: 3px solid var(--c-terracotta-ink);
+    outline-offset: -3px;
+  }
+
+  .karte-link:focus-visible {
+    outline: none;
+  }
+</style>

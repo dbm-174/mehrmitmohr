@@ -1,0 +1,67 @@
+---
+import Eyebrow from './Eyebrow.astro';
+import Handschrift from './Handschrift.astro';
+
+/** Einheitlicher Kopfbereich aller Unterseiten. */
+interface Props {
+  titel: string;
+  untertitel?: string;
+  eyebrow?: string;
+  einleitung?: string;
+  handschrift?: string;
+}
+
+const { titel, untertitel, eyebrow, einleitung, handschrift } = Astro.props;
+---
+
+<section class="seitenkopf">
+  <div class="page-width kopf-raster">
+    <div>
+      {eyebrow && <Eyebrow>{eyebrow}</Eyebrow>}
+      <h1>{titel}</h1>
+      {untertitel && <p class="untertitel">{untertitel}</p>}
+      {einleitung && <p class="einleitung">{einleitung}</p>}
+    </div>
+
+    {handschrift && (
+      <Handschrift class="notiz" drehung={-4}>{handschrift}</Handschrift>
+    )}
+  </div>
+</section>
+
+<style>
+  .seitenkopf {
+    background: var(--c-cream-warm);
+    padding-block: var(--space-2xl);
+  }
+
+  .kopf-raster {
+    display: grid;
+    gap: var(--space-lg);
+    align-items: center;
+  }
+
+  h1 {
+    margin-top: var(--space-md);
+    max-width: 20ch;
+  }
+
+  .untertitel {
+    margin-top: var(--space-sm);
+    font-family: var(--font-serif);
+    font-size: var(--fs-lead);
+    color: var(--c-green-ink);
+  }
+
+  .einleitung {
+    margin-top: var(--space-md);
+    max-width: 52ch;
+    font-size: var(--fs-lead);
+  }
+
+  @media (min-width: 62em) {
+    .kopf-raster {
+      grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+    }
+  }
+</style>

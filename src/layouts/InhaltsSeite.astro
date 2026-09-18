@@ -1,0 +1,110 @@
+---
+import { getEntry, render } from 'astro:content';
+import BaseLayout from './BaseLayout.astro';
+import SeitenKopf from '../components/SeitenKopf.astro';
+import Kontaktformular from '../components/Kontaktformular.astro';
+import AbschlussBand from '../components/AbschlussBand.astro';
+import { startseite } from '../lib/inhalte.ts';
+
+/**
+ * Gemeinsames Gerüst für alle Textseiten aus der Sammlung "Seiten"
+ * (Für Autor:innen, Über mich, Kontakt, Impressum, Datenschutz).
+ * Die Seiten unter src/pages/ reichen nur noch ihre Kennung herein.
+ */
+interface Props {
+  /** Dateiname ohne .md unter content/seiten/ */
+  kennung: string;
+}
+
+const { kennung } = Astro.props;
+
+const eintrag = await getEntry('seiten', kennung);
+if (!eintrag) {
+  throw new Error(
+    `Die Inhaltsdatei content/seiten/${kennung}.md fehlt. ` +
+      `Entweder wurde sie gelöscht oder in TinaCMS umbenannt.`,
+  );
+}
+
+const { Content } = await render(eintrag);
+const daten = eintrag.data;
+const abschluss = startseite.abschluss;
+---
+
+<BaseLayout
+  titel={daten.seo?.titel ?? daten.titel}
+  beschreibung={daten.seo?.beschreibung}
+  bild={daten.bild}
+>
+  <SeitenKopf
+    titel={daten.titel}
+    untertitel={daten.untertitel}
+    eyebrow={daten.eyebrow}
+    einleitung={daten.einleitung}
+    handschrift={daten.handschrift}
+  />
+
+  <div class="section">
+    <div class="page-width inhalt-raster">
+      <div class="prose">
+        <Content />
+      </div>
+
+      {daten.bild && (
+        <figure class="portrait">
+          <img src={daten.bild} alt={daten.bildAlt ?? ''} loading="lazy" decoding="async" />
+        </figure>
+      )}
+    </div>
+
+    {daten.zeigeFormular && (
+      <div class="page-width formular-block">
+        <h2>Nachricht schreiben</h2>
+        <Kontaktformular />
+      </div>
+    )}
+  </div>
+
+  {daten.zeigeKontaktBanner && (
+    <AbschlussBand
+      ueberschrift={abschluss.ueberschrift}
+      text={abschluss.text}
+      buttonText={abschluss.buttonText}
+      buttonLink={abschluss.buttonLink}
+      bild={abschluss.bild}
+      bildAlt={abschluss.bildAlt}
+    />
+  )}
+</BaseLayout>
+
+<style>
+  .inhalt-raster {
+    display: grid;
+    gap: var(--space-xl);
+    align-items: start;
+  }
+
+  .portrait img {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    object-fit: cover;
+    border-radius: var(--radius-md);
+  }
+
+  .formular-block {
+    margin-top: var(--space-2xl);
+    padding-top: var(--space-xl);
+    border-top: 1px solid var(--c-line);
+  }
+
+  .formular-block h2 {
+    margin-bottom: var(--space-lg);
+  }
+
+  @media (min-width: 62em) {
+    .inhalt-raster {
+      grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+      gap: var(--space-2xl);
+    }
+  }
+</style>

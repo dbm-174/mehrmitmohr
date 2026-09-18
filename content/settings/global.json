@@ -1,0 +1,56 @@
+{
+  "logo": {
+    "wortEins": "Mehr",
+    "wortKursiv": "mit",
+    "wortDrei": "Mohr",
+    "claim": "Lektorat · Redaktion · Text"
+  },
+  "navigation": [
+    {
+      "label": "Startseite",
+      "href": "/"
+    },
+    {
+      "label": "Leistungen",
+      "href": "/leistungen"
+    },
+    {
+      "label": "Für Autor:innen",
+      "href": "/fuer-autorinnen"
+    },
+    {
+      "label": "Über mich",
+      "href": "/ueber-mich"
+    },
+    {
+      "label": "Kontakt",
+      "href": "/kontakt"
+    }
+  ],
+  "kontakt": {
+    "name": "Kati Mohr",
+    "email": "hallo@mehrmitmohr.de",
+    "telefon": "",
+    "ort": ""
+  },
+  "formular": {
+    "endpoint": ""
+  },
+  "footer": {
+    "text": "Lektorat, Redaktion und Text für Unternehmen, Selbstständige und Autor:innen.",
+    "rechtlicheLinks": [
+      {
+        "label": "Impressum",
+        "href": "/impressum"
+      },
+      {
+        "label": "Datenschutz",
+        "href": "/datenschutz"
+      }
+    ]
+  },
+  "seo": {
+    "titel": "Mehr mit Mohr",
+    "beschreibung": "Lektorat, Redaktion und Manuskriptberatung von Kati Mohr – für Texte, die klar, verständlich und überzeugend sind."
+  }
+}

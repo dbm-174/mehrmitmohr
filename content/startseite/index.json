@@ -1,0 +1,44 @@
+{
+  "seo": {
+    "titel": "Mehr aus deinen Worten",
+    "beschreibung": "Lektorat, Redaktion und Manuskriptberatung von Kati Mohr – für Texte, die gehört und richtig verstanden werden."
+  },
+  "hero": {
+    "eyebrow": "Gute Texte. Klare Worte.",
+    "ueberschrift": "Mehr aus deinen Worten.",
+    "text": "Ich helfe dir dabei, aus guten Texten noch bessere zu machen – klar, verständlich, überzeugend. Denn jeder Text verdient es, gehört und richtig verstanden zu werden.",
+    "buttonText": "Text besprechen",
+    "buttonLink": "/kontakt",
+    "bild": "/uploads/hero.jpg",
+    "bildAlt": "Kati Mohr an ihrem Schreibtisch",
+    "handschrift": "Worte verbinden Menschen."
+  },
+  "leistungen": {
+    "eyebrow": "Was darf ich für dich tun?"
+  },
+  "ueberMich": {
+    "eyebrow": "Über mich",
+    "ueberschrift": "Mehr als 10 Jahre später hat sich eines nicht verändert: Gute Texte brauchen Menschen.",
+    "textEins": "Ich bin Kati Mohr – Lektorin und Redakteurin mit einem Masterabschluss in Literaturwissenschaft und Soziologie. Nach meinem Studium führte mich mein Weg in den Shaker Verlag nach Aachen. Dort betreute ich als Redakteurin und Lektorin Buch- und CD-Projekte unterschiedlichster Art. Später war ich im Huss Verlag für die Online-Redaktion und das Lektorat der Magazine Busplaner und Taxi Heute verantwortlich.",
+    "textZwei": "Heute unterstütze ich Unternehmen, Selbstständige und Autor:innen dabei, aus ihren Texten mehr herauszuholen. Mit Erfahrung, einem guten Gespür für Sprache und dem Blick fürs Wesentliche.",
+    "linkText": "Mehr über mich",
+    "linkZiel": "/ueber-mich",
+    "bild": "/uploads/buecher.jpg",
+    "bildAlt": "Ein Stapel Bücher neben einem Stiftebecher",
+    "handschrift": "Gründlich im Detail. Klar im Blick. Immer mit Herz für gute Texte."
+  },
+  "zitat": {
+    "text": "Gute Texte sind wie gute Gespräche. Sie schaffen Verbindung.",
+    "hintergrundbild": "/uploads/wiese.jpg",
+    "badgeText": "Lass uns den nächsten Text gemeinsam angehen",
+    "badgeLink": "/kontakt"
+  },
+  "abschluss": {
+    "ueberschrift": "Bereit für mehr aus deinem Text?",
+    "text": "Schick mir deinen Text oder erzähl mir kurz, worum es geht. Ich melde mich mit einer Einschätzung und einem transparenten Angebot.",
+    "buttonText": "Kontakt aufnehmen",
+    "buttonLink": "/kontakt",
+    "bild": "/uploads/notizbuch.jpg",
+    "bildAlt": "Notizbuch mit Füller auf einem Tisch"
+  }
+}

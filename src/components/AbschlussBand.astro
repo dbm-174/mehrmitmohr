@@ -1,0 +1,120 @@
+---
+import Button from './Button.astro';
+import Monogramm from './Monogramm.astro';
+
+/** Das grüne Band am Seitenende mit der Aufforderung zur Kontaktaufnahme. */
+interface Props {
+  ueberschrift: string;
+  text: string;
+  buttonText: string;
+  buttonLink: string;
+  bild?: string;
+  bildAlt?: string;
+}
+
+const { ueberschrift, text, buttonText, buttonLink, bild, bildAlt = '' } = Astro.props;
+---
+
+<section class="abschluss">
+  <div class="panel">
+    <div class="panel-inner">
+      <Monogramm class="signet" groesse="4rem" hell />
+      <div class="panel-text">
+        <h2>{ueberschrift}</h2>
+        <p>{text}</p>
+        <Button href={buttonLink} variante="hell">{buttonText}</Button>
+      </div>
+    </div>
+  </div>
+
+  {bild && (
+    <div class="bildseite">
+      <img src={bild} alt={bildAlt} loading="lazy" decoding="async" />
+    </div>
+  )}
+</section>
+
+<style>
+  .abschluss {
+    display: grid;
+    background: var(--c-green-deep);
+  }
+
+  .panel {
+    padding-block: var(--space-2xl);
+    padding-inline: var(--gutter);
+    color: var(--c-white);
+  }
+
+  .panel-inner {
+    display: flex;
+    gap: var(--space-lg);
+    align-items: flex-start;
+  }
+
+  .panel :global(.signet) {
+    display: none;
+    flex: none;
+    padding-right: var(--space-lg);
+    border-right: 1px solid rgba(255, 255, 255, 0.28);
+  }
+
+  .panel-text > * + * {
+    margin-top: var(--space-md);
+  }
+
+  .panel h2 {
+    color: var(--c-white);
+    font-size: var(--fs-h2);
+  }
+
+  .panel p {
+    max-width: 46ch;
+    color: rgba(255, 255, 255, 0.88);
+  }
+
+  .panel-text :global(.btn) {
+    margin-top: var(--space-lg);
+  }
+
+  /* Das Bild füllt seine Spalte als absolut positionierte Fläche.
+     Eine Prozenthöhe würde sich hier auf eine Höhe beziehen, die selbst
+     erst aus dem Bild entsteht – das Ergebnis wäre eine leere Spalte. */
+  .bildseite {
+    position: relative;
+    min-height: 14rem;
+  }
+
+  .bildseite img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  @media (min-width: 48em) {
+    .panel :global(.signet) {
+      display: block;
+    }
+  }
+
+  @media (min-width: 62em) {
+    .abschluss {
+      grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+      align-items: stretch;
+    }
+
+    .panel {
+      display: flex;
+      align-items: center;
+      /* Text bündig zum Seitencontainer beginnen lassen. */
+      padding-inline-start: max(var(--gutter), calc((180% - var(--width-page)) / 2));
+      padding-inline-end: var(--space-xl);
+    }
+
+    .bildseite {
+      min-height: 22rem;
+    }
+  }
+</style>

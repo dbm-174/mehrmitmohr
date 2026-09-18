@@ -1,0 +1,54 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import LeistungenGrid from '../components/LeistungenGrid.astro';
+import UeberMichTeaser from '../components/UeberMichTeaser.astro';
+import ZitatBand from '../components/ZitatBand.astro';
+import AbschlussBand from '../components/AbschlussBand.astro';
+import { startseite } from '../lib/inhalte.ts';
+
+const { hero, leistungen, ueberMich, zitat, abschluss, seo } = startseite;
+---
+
+<BaseLayout titel={seo.titel} beschreibung={seo.beschreibung} bild={hero.bild}>
+  <Hero
+    eyebrow={hero.eyebrow}
+    ueberschrift={hero.ueberschrift}
+    text={hero.text}
+    buttonText={hero.buttonText}
+    buttonLink={hero.buttonLink}
+    bild={hero.bild}
+    bildAlt={hero.bildAlt}
+    handschrift={hero.handschrift}
+  />
+
+  <LeistungenGrid eyebrow={leistungen.eyebrow} />
+
+  <UeberMichTeaser
+    eyebrow={ueberMich.eyebrow}
+    ueberschrift={ueberMich.ueberschrift}
+    textEins={ueberMich.textEins}
+    textZwei={ueberMich.textZwei}
+    linkText={ueberMich.linkText}
+    linkZiel={ueberMich.linkZiel}
+    bild={ueberMich.bild}
+    bildAlt={ueberMich.bildAlt}
+    handschrift={ueberMich.handschrift}
+  />
+
+  <ZitatBand
+    text={zitat.text}
+    hintergrundbild={zitat.hintergrundbild}
+    badgeText={zitat.badgeText}
+    badgeLink={zitat.badgeLink}
+  />
+
+  <AbschlussBand
+    ueberschrift={abschluss.ueberschrift}
+    text={abschluss.text}
+    buttonText={abschluss.buttonText}
+    buttonLink={abschluss.buttonLink}
+    bild={abschluss.bild}
+    bildAlt={abschluss.bildAlt}
+  />
+</BaseLayout>

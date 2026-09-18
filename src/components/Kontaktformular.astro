@@ -1,0 +1,180 @@
+---
+import { einstellungen, formularEndpoint, mailtoLink } from '../lib/inhalte.ts';
+
+/**
+ * Kontaktformular.
+ *
+ * Solange in den TinaCMS-Einstellungen unter "Formular" kein Endpunkt
+ * hinterlegt ist, kann eine statische Seite keine Nachricht verschicken.
+ * Dann zeigt diese Komponente stattdessen den E-Mail-Weg an – so steht auf
+ * der Kontaktseite nie ein Formular, das ins Leere läuft.
+ */
+const endpoint = formularEndpoint();
+const { kontakt } = einstellungen;
+---
+
+{endpoint ? (
+  <form class="formular" action={endpoint} method="post">
+    <div class="feld">
+      <label for="name">Name</label>
+      <input type="text" id="name" name="name" autocomplete="name" required />
+    </div>
+
+    <div class="feld">
+      <label for="email">E-Mail-Adresse</label>
+      <input type="email" id="email" name="email" autocomplete="email" required />
+    </div>
+
+    <div class="feld">
+      <label for="betreff">Worum geht es?</label>
+      <input type="text" id="betreff" name="betreff" />
+    </div>
+
+    <div class="feld">
+      <label for="nachricht">Deine Nachricht</label>
+      <textarea id="nachricht" name="nachricht" rows="7" required></textarea>
+    </div>
+
+    {/* Für Menschen unsichtbar – füllt nur ein Bot dieses Feld aus,
+        lässt sich die Nachricht serverseitig aussortieren. */}
+    <div class="honigtopf" aria-hidden="true">
+      <label for="webseite">Bitte nicht ausfüllen</label>
+      <input type="text" id="webseite" name="_gotcha" tabindex="-1" autocomplete="off" />
+    </div>
+
+    <div class="zustimmung">
+      <input type="checkbox" id="datenschutz" name="datenschutz" required />
+      <label for="datenschutz">
+        Ich bin damit einverstanden, dass meine Angaben zur Bearbeitung meiner Anfrage
+        verarbeitet werden. Details in der <a href="/datenschutz">Datenschutzerklärung</a>.
+      </label>
+    </div>
+
+    <button type="submit" class="absenden">Nachricht senden</button>
+  </form>
+) : (
+  <div class="mail-karte">
+    <h2>Schreib mir eine E-Mail</h2>
+    <p>
+      Am einfachsten erreichst du mich direkt per E-Mail – gern mit deinem Text oder einem
+      Auszug im Anhang.
+    </p>
+    <p class="adresse">
+      <a href={mailtoLink()}>{kontakt.email}</a>
+    </p>
+    {kontakt.telefon && (
+      <p>
+        Telefonisch: <a href={`tel:${kontakt.telefon.replace(/[^+\d]/g, '')}`}>{kontakt.telefon}</a>
+      </p>
+    )}
+  </div>
+)}
+
+<style>
+  .formular {
+    display: grid;
+    gap: var(--space-md);
+    max-width: 38rem;
+  }
+
+  .feld {
+    display: grid;
+    gap: var(--space-2xs);
+  }
+
+  label {
+    font-size: var(--fs-small);
+    font-weight: 700;
+    color: var(--c-ink);
+  }
+
+  input[type='text'],
+  input[type='email'],
+  textarea {
+    width: 100%;
+    padding: 0.7em 0.85em;
+    background: var(--c-white);
+    border: 1px solid var(--c-line);
+    border-radius: var(--radius-sm);
+    color: var(--c-ink);
+  }
+
+  input:focus,
+  textarea:focus {
+    border-color: var(--c-green);
+  }
+
+  textarea {
+    resize: vertical;
+  }
+
+  .honigtopf {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  .zustimmung {
+    display: flex;
+    gap: var(--space-sm);
+    align-items: flex-start;
+  }
+
+  .zustimmung label {
+    font-weight: 400;
+    font-size: var(--fs-small);
+    color: var(--c-body);
+  }
+
+  .zustimmung input {
+    margin-top: 0.35em;
+    width: 1.1em;
+    height: 1.1em;
+    flex: none;
+    accent-color: var(--c-green);
+  }
+
+  .absenden {
+    justify-self: start;
+    padding: 0.85em 1.8em;
+    background: var(--c-green);
+    color: var(--c-white);
+    border: none;
+    border-radius: var(--radius-sm);
+    font-weight: 700;
+    cursor: pointer;
+    transition: background var(--transition);
+  }
+
+  .absenden:hover {
+    background: var(--c-green-deep);
+  }
+
+  /* --- Alternative ohne Formular-Dienst --- */
+  .mail-karte {
+    max-width: 38rem;
+    padding: var(--space-lg);
+    background: var(--c-white);
+    border: 1px solid var(--c-line);
+    border-radius: var(--radius-md);
+  }
+
+  .mail-karte > * + * {
+    margin-top: var(--space-md);
+  }
+
+  .mail-karte h2 {
+    font-size: var(--fs-h3);
+  }
+
+  .adresse {
+    font-family: var(--font-serif);
+    font-size: var(--fs-h3);
+  }
+
+  .adresse a {
+    color: var(--c-green-ink);
+  }
+</style>

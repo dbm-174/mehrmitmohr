@@ -1,0 +1,62 @@
+---
+/**
+ * Die handschriftlichen Notizen aus dem Layout ("Worte verbinden Menschen.").
+ * Rein dekorativ gedacht, aber als normaler Text lesbar – deshalb kein
+ * aria-hidden: Screenreader sollen die Sätze mitnehmen.
+ */
+interface Props {
+  /** Leichte Drehung, damit es handgeschrieben wirkt */
+  drehung?: number;
+  hell?: boolean;
+  /** Schwungstrich darunter ausblenden */
+  ohneStrich?: boolean;
+  class?: string;
+}
+
+const { drehung = -3, hell = false, ohneStrich = false, class: klasse } = Astro.props;
+---
+
+<p
+  class:list={['handschrift', { hell }, klasse]}
+  style={`--drehung: ${drehung}deg`}
+>
+  <slot />
+  {!ohneStrich && (
+    <svg class="strich" viewBox="0 0 120 12" aria-hidden="true" focusable="false">
+      <path
+        d="M2 8 C 28 2, 58 1, 86 4 C 100 5.5, 110 7, 118 9"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+      />
+    </svg>
+  )}
+</p>
+
+<style>
+  .handschrift {
+    font-family: var(--font-script);
+    font-size: var(--fs-script);
+    line-height: 1.35;
+    color: var(--c-ink);
+    transform: rotate(var(--drehung));
+    transform-origin: left center;
+  }
+
+  .hell {
+    color: var(--c-white);
+  }
+
+  .strich {
+    width: 7rem;
+    max-width: 100%;
+    height: auto;
+    margin-top: 0.15em;
+    color: var(--c-terracotta);
+  }
+
+  .hell .strich {
+    color: rgba(255, 255, 255, 0.8);
+  }
+</style>

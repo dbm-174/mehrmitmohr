@@ -1,0 +1,31 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SeitenKopf from '../../components/SeitenKopf.astro';
+import LeistungenGrid from '../../components/LeistungenGrid.astro';
+import AbschlussBand from '../../components/AbschlussBand.astro';
+import { startseite } from '../../lib/inhalte.ts';
+
+const abschluss = startseite.abschluss;
+---
+
+<BaseLayout
+  titel="Leistungen"
+  beschreibung="Lektorat, Redaktion, Manuskriptberatung, KI-Text-Redaktion und Texte für Unternehmen – ein Überblick."
+>
+  <SeitenKopf
+    titel="Was darf ich für dich tun?"
+    eyebrow="Leistungen"
+    einleitung="Vom ersten Entwurf bis zum fertigen Text: Such dir aus, wo du gerade stehst – jede Leistung erkläre ich auf einer eigenen Seite im Detail."
+  />
+
+  <LeistungenGrid />
+
+  <AbschlussBand
+    ueberschrift={abschluss.ueberschrift}
+    text={abschluss.text}
+    buttonText={abschluss.buttonText}
+    buttonLink={abschluss.buttonLink}
+    bild={abschluss.bild}
+    bildAlt={abschluss.bildAlt}
+  />
+</BaseLayout>

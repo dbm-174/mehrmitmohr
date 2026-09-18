@@ -1,0 +1,54 @@
+---
+/**
+ * Die kleine, gesperrte Überzeile über einer Sektion – im Layout z. B.
+ * "GUTE TEXTE. KLARE WORTE." oder "WAS DARF ICH FÜR DICH TUN?".
+ * Darunter sitzt ein kurzer Strich in Terrakotta.
+ */
+interface Props {
+  /** true = Text und Strich mittig (wie im Leistungs-Bereich) */
+  zentriert?: boolean;
+  /** true = helle Schrift für dunkle Flächen */
+  hell?: boolean;
+  class?: string;
+}
+
+const { zentriert = false, hell = false, class: klasse } = Astro.props;
+---
+
+<p class:list={['eyebrow', { zentriert, hell }, klasse]}>
+  <slot />
+</p>
+
+<style>
+  .eyebrow {
+    margin: 0;
+    font-family: var(--font-sans);
+    font-size: var(--fs-eyebrow);
+    font-weight: 700;
+    letter-spacing: var(--ls-eyebrow);
+    line-height: 1.4;
+    text-transform: uppercase;
+    color: var(--c-muted);
+  }
+
+  .eyebrow::after {
+    content: '';
+    display: block;
+    width: 2.5rem;
+    height: 2px;
+    margin-top: var(--space-sm);
+    background: var(--c-terracotta);
+  }
+
+  .zentriert {
+    text-align: center;
+  }
+
+  .zentriert::after {
+    margin-inline: auto;
+  }
+
+  .hell {
+    color: rgba(255, 255, 255, 0.82);
+  }
+</style>

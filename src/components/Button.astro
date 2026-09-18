@@ -1,0 +1,95 @@
+---
+/**
+ * Schaltfläche im Stil des Layouts. Rendert immer einen Link, weil alle
+ * Buttons der Seite zu einer anderen Seite führen.
+ *
+ *   variante="primaer"  – gefüllte grüne Fläche (Hero)
+ *   variante="hell"     – weiße Kontur auf dunklem Grund (Abschluss-Band)
+ *   variante="text"     – reiner Textlink mit Pfeil ("Mehr erfahren →")
+ */
+interface Props {
+  href: string;
+  variante?: 'primaer' | 'hell' | 'text';
+  /** Pfeil am Ende ausblenden */
+  ohnePfeil?: boolean;
+  class?: string;
+}
+
+const { href, variante = 'primaer', ohnePfeil = false, class: klasse } = Astro.props;
+const extern = /^https?:\/\//.test(href);
+---
+
+<a
+  href={href}
+  class:list={['btn', variante, klasse]}
+  {...extern ? { target: '_blank', rel: 'noopener noreferrer' } : {}}
+>
+  <span><slot /></span>
+  {!ohnePfeil && <span class="pfeil" aria-hidden="true">&rarr;</span>}
+</a>
+
+<style>
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6em;
+    font-family: var(--font-sans);
+    font-size: var(--fs-body);
+    text-decoration: none;
+    transition: background var(--transition), color var(--transition),
+      border-color var(--transition), transform var(--transition);
+  }
+
+  .pfeil {
+    transition: transform var(--transition);
+  }
+
+  .btn:hover .pfeil {
+    transform: translateX(3px);
+  }
+
+  /* --- gefüllt --- */
+  .primaer {
+    padding: 0.85em 1.6em;
+    background: var(--c-green);
+    color: var(--c-white);
+    border-radius: var(--radius-sm);
+    font-weight: 700;
+  }
+
+  .primaer:hover {
+    background: var(--c-green-deep);
+    color: var(--c-white);
+  }
+
+  /* --- Kontur auf dunklem Grund --- */
+  .hell {
+    padding: 0.85em 1.6em;
+    background: transparent;
+    color: var(--c-white);
+    border: 1px solid rgba(255, 255, 255, 0.65);
+    border-radius: var(--radius-sm);
+    font-weight: 700;
+  }
+
+  .hell:hover {
+    background: var(--c-white);
+    color: var(--c-green-deep);
+    border-color: var(--c-white);
+  }
+
+  .hell:focus-visible {
+    outline-color: var(--c-white);
+  }
+
+  /* --- reiner Textlink --- */
+  .text {
+    color: var(--c-accent-ink, var(--c-green-ink));
+    font-weight: 700;
+    font-size: var(--fs-small);
+  }
+
+  .text:hover {
+    color: var(--c-ink);
+  }
+</style>

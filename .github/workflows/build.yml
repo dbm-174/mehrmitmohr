@@ -1,0 +1,66 @@
+name: Website bauen
+
+# Läuft bei jedem Push auf main – also auch dann, wenn die Redaktion in
+# TinaCMS auf "Speichern" klickt, denn Tina schreibt ihre Änderungen als
+# Commit in dieses Repository.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  bauen:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Abhängigkeiten installieren
+        run: npm ci
+
+      - name: Website bauen
+        env:
+          NEXT_PUBLIC_TINA_CLIENT_ID: ${{ secrets.NEXT_PUBLIC_TINA_CLIENT_ID }}
+          TINA_TOKEN: ${{ secrets.TINA_TOKEN }}
+          TINA_BRANCH: main
+          SITE_URL: ${{ vars.SITE_URL }}
+        run: npm run build
+
+      - name: Ergebnis als Artefakt sichern
+        uses: actions/upload-artifact@v4
+        with:
+          name: website
+          path: dist/
+          retention-days: 14
+
+      # ------------------------------------------------------------------
+      # HIER FEHLT NOCH DER DEPLOY-SCHRITT
+      #
+      # Ohne ihn baut dieser Workflow die Seite zwar, lädt sie aber nirgends
+      # hoch: Änderungen der Redaktion erscheinen dann nicht automatisch
+      # online. Bis der Schritt eingerichtet ist, muss das Artefakt von Hand
+      # heruntergeladen und auf den Server kopiert werden.
+      #
+      # Für einen eigenen Server per rsync über SSH sieht das typischerweise
+      # so aus (Werte in den Repository-Secrets hinterlegen und die folgenden
+      # Zeilen einkommentieren):
+      #
+      # - name: Auf den Server übertragen
+      #   uses: burnett01/rsync-deployments@7.0.2
+      #   with:
+      #     switches: -avzr --delete
+      #     path: dist/
+      #     remote_path: ${{ secrets.DEPLOY_PFAD }}
+      #     remote_host: ${{ secrets.DEPLOY_HOST }}
+      #     remote_user: ${{ secrets.DEPLOY_USER }}
+      #     remote_key:  ${{ secrets.DEPLOY_SSH_KEY }}
+      #
+      # Achtung bei "--delete": Es löscht auf dem Server alles, was nicht im
+      # Build enthalten ist. Vorher prüfen, dass im Zielverzeichnis nichts
+      # anderes liegt.
+      # ------------------------------------------------------------------
