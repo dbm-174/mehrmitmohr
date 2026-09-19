@@ -1,0 +1,7 @@
+[Unit]
+Description=Website kati.dbm-connect.de aktualisieren
+Documentation=https://github.com/dbm-174/mehrmitmohr
+
+[Service]
+Type=oneshot
+ExecStart=/home/bandgap/mehrmitmohr/update.sh

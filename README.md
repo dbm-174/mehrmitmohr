@@ -76,6 +76,21 @@ docker login ghcr.io             # einmalig, solange das Paket privat ist
 docker compose pull && docker compose up -d
 ```
 
+### Automatische Aktualisierung
+
+Auf dem Server (`ssh bandgap`, Verzeichnis `~/mehrmitmohr`) prüft ein systemd-Timer alle drei
+Minuten, ob ein neues Image vorliegt, und startet den Container nur dann neu. Die Dateien dazu
+liegen in `docker/update.sh` und `docker/systemd/`.
+
+```bash
+systemctl --user list-timers mehrmitmohr-update.timer   # wann läuft er das nächste Mal
+journalctl --user -u mehrmitmohr-update.service -n 20   # was hat er zuletzt getan
+~/mehrmitmohr/update.sh                                 # sofort aktualisieren
+```
+
+Der Timer läuft nur, solange der Benutzer-systemd aktiv ist. Damit er einen Neustart und das
+Abmelden übersteht, muss einmalig `sudo loginctl enable-linger bandgap` ausgeführt werden.
+
 Der Container lauscht nur auf `127.0.0.1:8080` – nach außen geht es über Caddy:
 
 ```
