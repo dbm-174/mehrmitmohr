@@ -8,8 +8,15 @@ Technische Kenntnisse sind nicht nötig.
 1. Im Browser die Adresse der Website aufrufen und **/admin** anhängen,
    also zum Beispiel `https://kati.dbm-connect.de/admin`.
 2. Mit dem TinaCMS-Zugang anmelden.
+3. Oben links auf das Symbol mit den drei Strichen (☰) klicken.
 
-Danach erscheint links eine Liste mit vier Bereichen.
+Erst dann erscheint links die Liste mit den vier Bereichen. Steht dort nur
+„TinaCMS form fields will appear here", ist die Liste noch zugeklappt – das
+ist kein Fehler. Dieser Text bedeutet lediglich, dass gerade kein Eintrag
+zum Bearbeiten geöffnet ist.
+
+Direkt zur Liste führt auch diese Adresse:
+`https://kati.dbm-connect.de/admin/index.html#/collections/startseite`
 
 ## Die vier Bereiche
 
