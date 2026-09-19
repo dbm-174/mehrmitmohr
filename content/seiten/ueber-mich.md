@@ -3,7 +3,7 @@ titel: Über mich
 untertitel: Kati Mohr – Lektorin und Redakteurin
 eyebrow: Über mich
 einleitung: 'Mehr als 10 Jahre später hat sich eines nicht verändert: Gute Texte brauchen Menschen.'
-bild: /uploads/portrait.jpg
+bild: ''
 bildAlt: Kati Mohr
 handschrift: Gründlich im Detail. Klar im Blick.
 zeigeKontaktBanner: true
