@@ -46,11 +46,12 @@ Ohne `.env` läuft `npm run dev` trotzdem: Tina startet dann im lokalen Modus,
    Repository-Secrets `NEXT_PUBLIC_TINA_CLIENT_ID` und `TINA_TOKEN` hinterlegen.
    Danach die Redakteurin als zweiten Benutzer einladen (im kostenlosen Tarif sind
    zwei Benutzer enthalten).
-2. **Deploy einrichten** – `.github/workflows/build.yml` baut die Seite bereits bei jedem
-   Push, lädt sie aber noch nirgends hoch. Der Platzhalter für den Übertragungsschritt ist
-   dort markiert. Ohne ihn erscheinen Änderungen der Redaktion nicht automatisch online.
-3. **Domain eintragen** – `SITE_URL` in `.env` bzw. als Repository-Variable setzen
-   (wird für `sitemap.xml` und die Vorschaubilder gebraucht).
+2. **Deploy einrichten** – `.github/workflows/build.yml` baut bei jedem Push ein
+   Docker-Image nach `ghcr.io/dbm-174/mehrmitmohr`, der Server holt es aber noch nicht
+   von selbst. Der Platzhalter für den SSH-Schritt ist dort markiert. Ohne ihn erscheinen
+   Änderungen der Redaktion erst nach `docker compose pull && docker compose up -d`.
+3. **Domain** – steht auf `https://kati.dbm-connect.de` (in `.env`, `Dockerfile`,
+   `docker-compose.yml` und im Workflow). Bei einem Umzug alle vier Stellen anpassen.
 4. **Echte Fotos einsetzen** – siehe `public/uploads/README.md`.
 5. **Impressum und Datenschutz** – die Texte unter `content/seiten/` sind Vorlagen mit
    Platzhaltern in eckigen Klammern und müssen rechtlich geprüft werden.
@@ -58,6 +59,30 @@ Ohne `.env` läuft `npm run dev` trotzdem: Tina startet dann im lokalen Modus,
    Formular-Dienst feststeht, dessen Adresse in TinaCMS unter *Einstellungen → Formular*
    eintragen; dann erscheint automatisch das Formular. Der Datenschutztext muss dann um
    diesen Dienst ergänzt werden.
+
+## Docker
+
+Die Seite läuft als nginx-Container, der nur die fertigen Dateien ausliefert.
+
+```bash
+docker compose up -d --build     # lokal bauen und starten -> http://localhost:8080
+```
+
+Die Tina-Zugangsdaten gehen als Build-Secrets hinein und landen in keiner Image-Schicht.
+Auf dem Server liegt nur `docker-compose.yml`; dort genügt
+
+```bash
+docker login ghcr.io             # einmalig, solange das Paket privat ist
+docker compose pull && docker compose up -d
+```
+
+Der Container lauscht nur auf `127.0.0.1:8080` – nach außen geht es über Caddy:
+
+```
+kati.dbm-connect.de {
+    reverse_proxy 127.0.0.1:8080
+}
+```
 
 ## Aufbau
 

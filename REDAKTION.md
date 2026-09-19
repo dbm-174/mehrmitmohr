@@ -6,7 +6,7 @@ Technische Kenntnisse sind nicht nötig.
 ## Anmelden
 
 1. Im Browser die Adresse der Website aufrufen und **/admin** anhängen,
-   also zum Beispiel `https://www.mehrmitmohr.de/admin`.
+   also zum Beispiel `https://kati.dbm-connect.de/admin`.
 2. Mit dem TinaCMS-Zugang anmelden.
 
 Danach erscheint links eine Liste mit vier Bereichen.

@@ -1,0 +1,20 @@
+# Wird im Container neu erzeugt
+node_modules
+dist
+.astro
+public/admin
+tina/__generated__
+
+# Zugangsdaten gehören nicht in den Build-Kontext – sie kommen als Secret
+.env
+.env.*
+
+# Nicht für den Build gebraucht
+.git
+.github
+layout.jpg
+*.md
+!content/**/*.md
+!public/uploads/README.md
+Dockerfile
+docker-compose.yml

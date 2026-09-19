@@ -53,6 +53,6 @@ export function formularEndpoint(): string | null {
 }
 
 /** mailto-Link mit vorbereitetem Betreff. */
-export function mailtoLink(betreff = 'Anfrage über mehrmitmohr.de'): string {
+export function mailtoLink(betreff = 'Anfrage über die Website'): string {
   return `mailto:${einstellungen.kontakt.email}?subject=${encodeURIComponent(betreff)}`;
 }

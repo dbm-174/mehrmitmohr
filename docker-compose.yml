@@ -1,0 +1,30 @@
+# Lokal bauen und starten:
+#   docker compose up -d --build        ->  http://localhost:8080
+#
+# Auf dem Server (Image kommt fertig aus der GitHub-Registry):
+#   docker compose pull && docker compose up -d
+#
+# Die Tina-Zugangsdaten liest Compose aus der .env in diesem Verzeichnis.
+# Sie werden nur beim Bauen gebraucht – auf dem Server, der ausschließlich
+# pullt, ist keine .env nötig.
+
+services:
+  website:
+    image: ghcr.io/dbm-174/mehrmitmohr:latest
+    build:
+      context: .
+      args:
+        SITE_URL: ${SITE_URL:-https://kati.dbm-connect.de}
+        TINA_BRANCH: ${TINA_BRANCH:-main}
+      secrets:
+        - tina_client_id
+        - tina_token
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:${PORT:-8080}:80"
+
+secrets:
+  tina_client_id:
+    environment: NEXT_PUBLIC_TINA_CLIENT_ID
+  tina_token:
+    environment: TINA_TOKEN
