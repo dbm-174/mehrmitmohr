@@ -22,6 +22,21 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # Fehlen die Secrets, bricht der Tina-Build erst tief im Docker-Build
+      # mit einer schwer zu findenden Meldung ab – deshalb vorher prüfen.
+      - name: Tina-Zugangsdaten prüfen
+        env:
+          CLIENT_ID: ${{ secrets.NEXT_PUBLIC_TINA_CLIENT_ID }}
+          TOKEN: ${{ secrets.TINA_TOKEN }}
+        run: |
+          fehlt=""
+          [ -n "$CLIENT_ID" ] || fehlt="$fehlt NEXT_PUBLIC_TINA_CLIENT_ID"
+          [ -n "$TOKEN" ] || fehlt="$fehlt TINA_TOKEN"
+          if [ -n "$fehlt" ]; then
+            echo "::error::Repository-Secrets fehlen oder sind leer:$fehlt – einzutragen unter Settings → Secrets and variables → Actions → Repository secrets"
+            exit 1
+          fi
+
       - uses: docker/setup-buildx-action@v3
 
       - name: An der GitHub-Registry anmelden
